@@ -1,0 +1,110 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../view/view-options.html">
+<link rel="import" href="../view/view-schedule-mtng.html">
+
+
+<dom-module id="mtng-mgmt-app">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        width: 800px;
+        padding: 20px;
+      }
+
+      #mainWindow {
+        padding: 30px;
+      }
+
+      .bottomLink {
+        padding: 0 10px;
+      }
+
+      .bottomLink a {
+        color: gray;
+        font-size: 0.7em;
+      }
+    </style>
+    
+    <div id="mainWindow">
+      <!-- These divs swap depending on which mode the user is in  -->
+      <div id="options" hidden$="{{optionsHidden}}">
+        <view-options schedule-mtng-click="{{scheduleMtngClick}}" view-calendar-click="{{viewCalendarClick}}"></view-options>
+      </div>
+
+      <div id="scheduleMtng" hidden$="{{scheduleMtngHidden}}">
+        <view-schedule-mtng cancel-click="{{viewOptionsClick}}"></view-schedule-mtng>
+      </div>
+
+      <div id="viewCalendar" hidden$="{{viewCalendarHidden}}">
+        <view-calendar></view-calendar>
+      </div>
+    </div>
+
+    <div id="neverHidden" class="horizontal end-justified layout">
+      <div class="horizontal justified layout">
+        <div class="bottomLink">
+          <a href="#" on-tap="_onScheduleMtngclick">Schedule</a>
+        </div>
+        <div class="bottomLink">
+          <a href="#" on-tap="_onViewCalendarClick">Calendar</a>
+        </div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'mtng-mgmt-app',
+
+      properties: {
+        
+      },
+
+      observers: [
+        '_onScheduleMtngclick(scheduleMtngClick)',
+        '_onViewCalendarClick(viewCalendarClick)',
+        '_onViewOptionsClick(viewOptionsClick)'
+      ],
+
+      _activateView: function(view) {
+        this.optionsHidden = true;
+        this.scheduleMtngHidden = true;
+        this.viewCalendarHidden = true;
+
+        switch (view) {
+          case "viewOptions":
+            this.optionsHidden = false;
+            break;
+          case "scheduleMtng":
+            this.scheduleMtngHidden = false;
+            break;
+          case "viewCalendar":
+            this.viewCalendarHidden = false;
+            break;
+        }
+      },
+
+      _onScheduleMtngclick: function(bool) {
+        this._activateView("scheduleMtng");
+      },
+
+      _onViewCalendarClick: function() {
+        this._activateView("viewCalendar");
+      },
+
+      _onViewOptionsClick: function() {
+        this._activateView("viewOptions");
+      },
+
+      ready: function() {
+        this._activateView("viewOptions");
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,60 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="view-options">
+
+	<template>
+		<style is="custom-style" include="iron-flex iron-flex-alignment">
+			:host {
+	      display: block;
+	      --app-primary-color: #4285f4;
+	      --app-primary-background-color: #f9f9f9;
+	      --app-secondary-color: black;
+	      --secondary-text-color: #cccccc;
+	    }
+	  </style>
+	  <div class="vertical layout">
+	  	<div>
+	  		What would you like to do?
+	  	</div>
+		  <div class="horizontal justified layout">
+		  	<paper-button raised on-tap="scheduleMtng">Schedule a Meeting</paper-button>
+		  	<paper-button raised on-tap="viewCalendar">View a Calendar</paper-button>
+			</div>
+		</div>
+	</template>
+	<script>
+		Polymer({
+    	is: 'view-options',
+    	properties:{
+    		scheduleMtngClick: {
+    			type: Boolean,
+    			value: false,
+    			notify: true,
+    			reflectToAttribute: true
+    		},
+
+    		viewCalendarClick: {
+    			type: Boolean,
+    			value: false,
+    			notify: true,
+    			reflectToAttribute: true
+    		}
+
+    	},
+
+    	scheduleMtng: function() {
+    		this.scheduleMtngClick = !this.scheduleMtngClick;
+    	},
+
+    	viewCalendar: function() {
+    		this.viewCalendarClick = !this.viewCalendarClick;
+    	},
+
+    	ready: function(){
+
+    	}
+
+    });
+  </script>

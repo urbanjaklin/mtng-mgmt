@@ -1,0 +1,129 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+<dom-module id="view-schedule-mtng">
+
+    <template>
+
+        <style is="custom-style" include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+                --app-primary-color: #4285f4;
+                --app-primary-background-color: #f9f9f9;
+                --app-secondary-color: black;
+                --secondary-text-color: #cccccc;
+            }
+
+            #header {
+                font-size: 1.1em;
+            }
+
+            #form {
+                padding: 16px;
+            }
+
+            #cancelButton {
+                background-color: #F44336;
+                color: white;
+            }
+
+            #submitButton {
+                background-color: #2196F3;
+                color: white;
+            }
+
+            #checkboxContainer {
+                padding: 8px 0;
+            }
+
+        </style>
+        <iron-ajax
+            auto
+            url="../resources/employees.json"
+            handle-as="json"
+            last-response="{{employees}}"></iron-ajax>
+        <iron-ajax
+            auto
+            url="../resources/rooms.json"
+            handle-as="json"
+            last-response="{{rooms}}"></iron-ajax>
+        <iron-ajax
+            url="../resources/meetings.json"
+            handle-as="json"></iron-ajax>
+        <div id="header">
+            Meeting Information
+        </div>
+        <form is="iron-form" id="meetingForm" on-iron-form-presubmit="presubmit" on-iron-form-submit="submit" on-iron-form-invalid="submitInvalid" content-type="application/json">
+            <div id="form" class="vertical layout">
+                <paper-input label="Title"></paper-input>
+                <paper-textarea label="Description (Optional)"></paper-textarea>
+                <vaadin-date-picker label="Date"></vaadin-date-picker>
+                <paper-dropdown-menu label="Room">
+                    <paper-listbox class="dropdown-content">
+                        <template is="dom-repeat" items="[[rooms]]">
+                            <paper-item>[[item.building]] [[item.id]]</paper-item>
+                        </template>
+                    </paper-listbox>
+                </paper-dropdown-menu>
+                <div id="checkboxContainer" class="vertical layout">
+                    <template is="dom-repeat" items="[[employees]]">
+                        <paper-checkbox noink name="[[item.id]]">[[item.firstName]] [[item.lastName]]</paper-checkbox>
+                    </template>
+                </div>
+            </div>
+            <div class="horizontal justified layout">
+                <button type="submit" style="height: 100%; background: none; border: none; font-size: 1em; padding: 0;"> <paper-button id="submitButton" raised>Submit</paper-button></button>
+                <paper-button id="cancelButton" raised on-tap="returnToOptions">Cancel</paper-button>
+            </div>
+        </form>
+        
+    </template>
+
+    <script>
+
+        Polymer({
+            is: 'view-schedule-mtng',
+            properties: {
+                cancelClick: {
+                    type: Boolean,
+                    value: false,
+                    notify: true,
+                    reflectToAttribute: true
+                },
+                employees: {
+                    type: Array,
+                },
+                rooms : {
+                    type: Array,
+                }
+
+            },
+
+            presubmit: function() {
+                console.log("PRESUBMIT AAAA");
+            },
+
+            submit: function() {
+                console.log("SUBMIT");
+            },
+
+            returnToOptions: function() {
+                this.cancelClick = !this.cancelClick;
+            },
+
+            ready: function() {
+            }
+        });
+
+    </script>
+
+</dom-module>

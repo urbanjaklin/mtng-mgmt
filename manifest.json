@@ -1,0 +1,7 @@
+{
+  "name": "MtngMgmt",
+  "short_name": "MtngMgmt",
+  "description": "Simple meeting management and viewing system.",
+  "start_url": "/",
+  "display": "standalone"
+}

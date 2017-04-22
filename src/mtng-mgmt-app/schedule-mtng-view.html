@@ -1,0 +1,106 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+<dom-module id="schedule-mtng-view">
+
+    <template>
+
+        <style is="custom-style" include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+                --app-primary-color: #4285f4;
+                --app-primary-background-color: #f9f9f9;
+                --app-secondary-color: black;
+                --secondary-text-color: #cccccc;
+            }
+            paper-input {
+                display:block;
+                --paper-input-container-color: grey;
+                --paper-input-container-focus-color: #3F51B5;
+                --paper-input-container-invalid-color: red;
+                --paper-input-container-input-color: black;
+
+            }
+            paper-input[readonly] {
+                opacity: 0.5;
+            }
+
+            .card {
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                padding: 16px;
+                margin: 4px;
+                border-radius: 2px;
+                background-color: #fff;
+                color: #757575;
+                z-index:999999;
+                pointer-events:all;
+
+            }
+            #palmettologo {
+                width: 150px;
+                height: 150px;
+                background: #ddd;
+            }
+            #submitlogin {
+                margin:16px;
+            }
+            #options {
+                margin:16px;
+            }
+            .errormessage {
+                @apply(--layout-vertical);
+                @apply(--layout-center);
+                margin: 16px 0 0 0;
+                color: red;
+            }
+            .formlabel {
+                width:120px;
+                text-align: right;
+                margin-right: 16px;
+            }
+            .formitem {
+                width:120px;
+                margin-right: 16px;
+            }
+            paper-input {
+                --paper-input-prefix: {
+                    margin-right: 8px;
+                }
+            }
+
+        </style>
+
+
+        <form is="iron-form" id="mtgForm" method="get" action="/" on-iron-form-presubmit="_loginpresubmit" on-iron-form-submit="_loginsubmit" on-iron-form-invalid="_loginsubmitinvalid">
+            <paper-input readonly$="[[processing]]" id="user" name="username" required class="flex" label="Username" autofocus required auto-validate pattern=".*" error-message="Username required"><iron-icon icon="social:person" prefix></iron-icon></paper-input>
+            <!-- add validation to password -->
+            <paper-input readonly$="[[processing]]" id="pass" name="password" required class="flex" label="Password" type="password" required auto-validate pattern=".*" error-message="Password required"><iron-icon icon="icons:lock" prefix></iron-icon></paper-input>
+           
+            <div class="horizontal end-justified layout">
+            <button type="submit" style="height: 100%; background: none; border: none; font-size: 1em; padding: 0;"><paper-button id="submitlogin" on-click="submit" raised>
+            </paper-button></button>
+        </div>
+        </form>
+        
+    </template>
+
+    <script>
+
+        Polymer({
+            is: 'schedule-mtng-view',
+            properties:{
+
+            },
+
+            submit: function() {
+                this.$.mtgForm.submit();
+            },
+
+            ready: function(){
+
+            }
+        });
+
+    </script>
+
+</dom-module>
