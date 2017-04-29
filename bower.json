@@ -13,7 +13,8 @@
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.5.0",
     "paper-listbox": "PolymerElements/paper-listbox#^1.1.2",
     "iron-fit-behavior": "PolymerElements/iron-fit-behavior#^1.2.6",
-    "paper-item": "PolymerElements/paper-item#^1.2.1"
+    "paper-item": "PolymerElements/paper-item#^1.2.1",
+    "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.6"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

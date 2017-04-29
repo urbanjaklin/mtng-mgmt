@@ -9,6 +9,7 @@
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 
 <dom-module id="view-schedule-mtng">
 
@@ -56,32 +57,32 @@
             url="../resources/rooms.json"
             handle-as="json"
             last-response="{{rooms}}"></iron-ajax>
-        <iron-ajax
-            url="../resources/meetings.json"
-            handle-as="json"></iron-ajax>
+        <iron-localstorage name="mtng-storage"
+            value="{{meetings}}"
+            on-iron-localstorage-load-empty="initializeDefault"></iron-localstorage>
         <div id="header">
             Meeting Information
         </div>
-        <form is="iron-form" id="meetingForm" on-iron-form-presubmit="presubmit" on-iron-form-submit="submit" on-iron-form-invalid="submitInvalid" content-type="application/json">
+        <form id="meetingForm">
             <div id="form" class="vertical layout">
-                <paper-input label="Title"></paper-input>
-                <paper-textarea label="Description (Optional)"></paper-textarea>
-                <vaadin-date-picker label="Date"></vaadin-date-picker>
-                <paper-dropdown-menu label="Room">
+                <paper-input id="title" label="Title"></paper-input>
+                <paper-textarea id="desc" label="Description (Optional)"></paper-textarea>
+                <vaadin-date-picker id="date" label="Date"></vaadin-date-picker>
+                <paper-dropdown-menu id="room" label="Room" selected-item="{{room}}">
                     <paper-listbox class="dropdown-content">
                         <template is="dom-repeat" items="[[rooms]]">
-                            <paper-item>[[item.building]] [[item.id]]</paper-item>
+                            <paper-item value="[[item.building]] [[item.id]]">[[item.building]] [[item.id]]</paper-item>
                         </template>
                     </paper-listbox>
                 </paper-dropdown-menu>
                 <div id="checkboxContainer" class="vertical layout">
                     <template is="dom-repeat" items="[[employees]]">
-                        <paper-checkbox noink name="[[item.id]]">[[item.firstName]] [[item.lastName]]</paper-checkbox>
+                        <paper-checkbox noink name="[[item.id]]" on-change="employeeCheck">[[item.firstName]] [[item.lastName]]</paper-checkbox>
                     </template>
                 </div>
             </div>
             <div class="horizontal justified layout">
-                <button type="submit" style="height: 100%; background: none; border: none; font-size: 1em; padding: 0;"> <paper-button id="submitButton" raised>Submit</paper-button></button>
+                <paper-button id="submitButton" on-tap="submit" raised>Submit</paper-button>
                 <paper-button id="cancelButton" raised on-tap="returnToOptions">Cancel</paper-button>
             </div>
         </form>
@@ -102,18 +103,58 @@
                 employees: {
                     type: Array,
                 },
+                employeesChecked: {
+                    type: Array,
+                    value: []
+                },
+                room: {
+                    value: ""
+                },
                 rooms : {
                     type: Array,
                 }
 
             },
 
-            presubmit: function() {
-                console.log("PRESUBMIT AAAA");
+            observers: [
+                'meetingsChange(meetings.*)'
+            ],
+
+            meetingsChange: function(meetings) {
+                console.log(meetings);
+                if(meetings.path == "meetings") {
+                    this.scheduledMeetings = meetings;
+                }
+            },
+
+            initializeDefault: function() {
+                var temp = new Array();
+                this.set("meetings", temp);
+            },
+
+            employeeCheck: function(e) {
+                if(e.target.checked) {
+                    console.log(e.target.name);
+                    this.push("employeesChecked", e.target.name);
+                }
+                else {
+                    var index = this.employeesChecked.indexOf(e.target.name);
+                    this.employeesChecked.splice(index, 1);
+                }
+                console.log(this.employeesChecked);
             },
 
             submit: function() {
                 console.log("SUBMIT");
+                var newmtng = {
+                    "title" : this.$.title.value,
+                    "desc" : this.$.desc.value,
+                    "date" : this.$.date.value,
+                    "room" : this.room.value,
+                    "employees" : this.employeesChecked
+                };
+                this.push("meetings", newmtng);
+                console.log(this.meetings);
             },
 
             returnToOptions: function() {
@@ -121,6 +162,7 @@
             },
 
             ready: function() {
+                console.log(this.meetings);
             }
         });
 
